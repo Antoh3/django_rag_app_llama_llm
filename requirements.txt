@@ -6,4 +6,5 @@ pytest
 # boto3
 langchain_ollama
 langchain-chroma
+langchain-community
 
