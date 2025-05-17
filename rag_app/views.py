@@ -1,19 +1,13 @@
 import os
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.files.storage import default_storage
-from django.conf import settings
-
-from langchain_community.document_loaders import PyPDFDirectoryLoader
-from langchain_chroma import Chroma
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_core.documents import Document
 
 
-from .chroma_utils import load_documents,split_documents,add_to_chroma,clear_database
+from .chroma_utils import load_documents,split_documents,add_to_chroma,clear_database,clear_chroma_database
 from .query_vector_db import query_rag
 
 UPLOAD_DIR = "data"
@@ -54,12 +48,15 @@ def query_chroma_view(request):
 
     try:
         response = query_rag(query)
-        return Response({'response': response})
+        return Response({'response': response},status=200)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
     
 @csrf_exempt
-@api_view(["POST"])
-def reset_chroma():
-    clear_database()
-    return HttpResponse({"message": "Chroma database cleared."})
+@api_view(['POST'])
+def reset_chroma(request):
+    try:
+        clear_chroma_database()
+        return JsonResponse({'message': 'Chroma database cleared successfully'})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

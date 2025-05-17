@@ -22,6 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('upload/', views.upload_pdf_view, name="upload"),
     path('query/', views.query_chroma_view, name="query"),
-    path('test/', views.test, name="test"),
-    path('clear/', views.clear_database, name="clear"),
+    # path('test/', views.test, name="test"),
+    path('clear/', views.reset_chroma, name="clear"),
 ]
